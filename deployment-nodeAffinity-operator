@@ -1,0 +1,27 @@
+Use Right Operators: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#operators
+key: node-role.kubernetes.io/control-plane - Is set to controlplane node already
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  selector:
+    matchLabels:
+      app: store
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+      containers:
+      - name: nginx-server
+        image: nginx
